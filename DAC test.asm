@@ -46,7 +46,6 @@ Init:
     movlf D'25', POSTINC0
     movlf D'53', POSTINC0
     movlf D'89', POSTINC0
-    movlf D'128', POSTINC0
 
     nop
     nop

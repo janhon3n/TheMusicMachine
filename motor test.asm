@@ -44,8 +44,8 @@ MainLoop:
     bcf PORTB, 1
     bsf PORTC, 2
     rcall MotorDelay
-    bsf PORTE, 2
     bcf PORTB, 0
+    bsf PORTE, 2
     rcall MotorDelay
     bra MainLoop
     
