@@ -121,6 +121,8 @@ PreMainLoopSetup:
     
 MainLoop:
     
+	;TODO if button then skip to delay
+	
     ; UPDATE AUDIO
     decfsz audioDelayCounter
     bra AudioDelaySkip
@@ -193,17 +195,13 @@ MainLoop:
     nop
     bra MotorDelayContinue
     
-    
     MotorDelayContinue:
-    
-    
     
     movlf D'10', tickDelayCounter
     TickDelayLoop:
     decfsz tickDelayCounter
     bra TickDelayLoop
     bra MainLoop
-    
     
 UpdateDAC: ; Sends the data in DACByte to the DAC
     bcf PORTC,RC0 ; Clear PORTC,RC0 to select DAC
