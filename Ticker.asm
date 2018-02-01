@@ -18,7 +18,8 @@
 sineWaveAddress equ 0x50
 noteListAddress equ 0x70
  
-noteDelay  equ     65536-1000+12+2
+noteDelay  equ  65536-1000+12+2
+motorDelay equ	1492
  
  
 ; MACROS
@@ -58,13 +59,15 @@ Init:
     bcf TRISB, 1
     bcf TRISB, 0
     bcf TRISC, 2
+    
     movlf B'11001100', motorState
     ; setup motor delay
-    movlf 0x05, motorDelayH
-    movlf 0xD0, motorDelayL
+    movlw low motorDelay
+    movwf motorDelayH
+    movlw high motorDelay
+    movwf motorDelayL
     
-    
-    ; setup timer´
+    ; setup timerï¿½
     movlw  high  noteDelay
     movwf  TMR0H
     movlw  low  noteDelay
@@ -74,7 +77,8 @@ Init:
 	
     bcf	INTCON,TMR0IF	; nollaa keskeytyslippu
     bsf	INTCON,TMR0IE	; salli TMR0 keskeytykset
-    bsf	INTCON,GIE	; salli keskeytykset
+    bsf	INTCON,GIE	; salli keskeytykset    
+    
     
     
     ; Load noteDelays
@@ -147,7 +151,7 @@ MainLoop:
     bra MotorDelaySkipHigh
     movff motorDelayH, motorDelayCounterH
     ; aika vaihtaa askelmaa
-    rcall ChangeMotorStep
+    call ChangeMotorStep
         
     
     MotorDelaySkipLow:
@@ -214,10 +218,10 @@ UpdateDAC: ; Sends the data in DACByte to the DAC
     
 SPItransfer:
     bcf PIR1,SSPIF ; Clear PIR1,SSPIF to ready for transfer.
-    movff spiByte,SSPBUF ; Initiates write when anything is placed in SSPBUF. Byteà SSPBUF
+    movff spiByte,SSPBUF ; Initiates write when anything is placed in SSPBUF. Byteï¿½ SSPBUF
 Wait_SPI: ; Wait until transfer is finished.
     btfss PIR1,SSPIF ; Testaa lippua
-    bra Wait_SPI ; Ei asettunut, hyppää Wait_SPI
+    bra Wait_SPI ; Ei asettunut, hyppï¿½ï¿½ Wait_SPI
     movff SSPBUF,trash
     return
     
@@ -237,7 +241,7 @@ Timer0Interrupt:
 	
 	; vaihda audioDelay
 	movf POSTINC1, w
-	TSTFSZ WREG ; jos ladattu arvo = 0, siirry takaisen ensimmäiseen muistiosoitteeseen
+	TSTFSZ WREG ; jos ladattu arvo = 0, siirry takaisen ensimmï¿½iseen muistiosoitteeseen
 	bra SkipNoteAddressReset
 	movlf noteListAddress, FSR1L
 	movf POSTINC1, w
